@@ -111,11 +111,16 @@ UIQuery *app = [UIQuery withApplication];  //this will get a handle to the UIApp
 }}}
 
 ===Traversal===
-Every traversal call is applied to each view in the current UIQuery object and returns a new UIQuery object with the resulting views.
+When a traversal property is called on a UIQuery object, it will traverse the view hierarchy in the respective direction collecting the views into a new UIQuery object.  Since a UIQuery object itself contains a list of views, by default the *first* view is used as the starting point for the traversal.  If you want to traverse all the views in a UIQuery object call the property "all" beforehand.
 
  * find/descendants - collects all the descendant views
  * children - collects just the immediate child views
  * parents - collects all parent views up to the UIApplication (top parent)
+
+{{{
+[app.tableViewCell touch];  //This will touch the first UITableViewCell it finds
+[app.tableViewCell.all touch];  //This will touch the all the UITableViewCells it finds
+}}}
 
 If you don't call a traversal method, UIQuery will automatically call find/descendants for you, so the following are all equivalent:
 
@@ -149,13 +154,13 @@ Using the method with is a very powerful way to dynamically match against almost
 }}}
 
 ===View Interaction===
-As we all know a user interacts with the iPhone UI by touching it, so a UIQuery object provides a method called touch.  UIQuery also provides the methods show and flash which help with writing specs.  Calling one of these methods will get applied to each view in the list of views contained in the UIQuery object.
+As we all know a user interacts with the iPhone UI by touching it, so a UIQuery object provides a method called touch.  UIQuery also provides the methods show and flash which help with writing specs.  By default a view interaction call is applied to the *first* view in the UIQuery object.  If you want to apply the call to all the views contained in the UIQuery object, call the property "all" beforehand.
 
  * touch - simulates a user touch on the target view
  * show - reads all the properties on a view and logs them to the console
  * flash - flashes the view on iPhone so you can see where it's located
 
-UIQuery also makes it easy to call existing methods or properties on the actual views you find.  If the method doesn't exist on a UIQuery object it will forward that call to the list of views it contains.  For example take a UITextField, if you wanted to set it's text you would call it's api method setText:somevalue or set its property .text = somevalue.  With UIQuery it's as simple as doing either of the following:
+UIQuery also makes it easy to call existing methods or properties on the actual views you find.  If the method doesn't exist on a UIQuery object it will forward that call to the *first* view it contains.  To forward the call to all the contained views, call the property "all" beforehand.  For example take a UITextField, if you wanted to set it's text you would call it's api method setText:somevalue or set its property .text = somevalue.  With UIQuery it's as simple as doing either of the following:
 
 {{{
 [[app.textField.with placeholder:@"email"] setText:@"somevalue"];
@@ -215,15 +220,18 @@ NSString *labelText = [[label wait:2] text];
 ----
 
 =UIExpectation=
-UIExpectation let's you set expectations on your UIViews and is available on all UIQuery objects with the property "should".  If the expectation is met the spec continues, otherwise it fails.  Providing "not" will expect the opposite.
+UIExpectation let's you set expectations on your UIViews and is available on a UIQuery object through the property "should".  If the expectation is met the spec continues, otherwise it fails.  Providing "not" will expect the opposite.  As noted before a UIQuery object itself contains a list of views, and by default it will apply an expectation to its *first* view.  If you want to apply the expectation to all the views it contains, call the property "all" beforehand.
 
 {{{
-[label.should.have text@"User Profile"];
-[tableViewCell.should.not.have accessoryType:UITableViewCellAccessoryCheckmark];
+//Check that the first label has the correct text
+[app.label.should.have text@"User Profile"];
+
+//Make sure all the table cells are checked
+[app.tableView.tableViewCell.all.should.have accessoryType:UITableViewCellAccessoryCheckmark];
 }}}
 
 ===Should Exist===
-Calling the property exist will evaluate the UIQuery object to see if contains any resulting views.
+Calling the property exist will evaluate the UIQuery object to see if it contains any resulting views.
 
 {{{
 app.alertView.should.exist;
