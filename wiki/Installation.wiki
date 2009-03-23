@@ -1,0 +1,40 @@
+#summary How To Install UISpec.
+
+= Installation =
+
+===Getting UISpec===
+Currently UISpec is available only through the repository.  Soon we will have a distribution zip that you can download. For now just:
+
+ * Checkout/export UISpec using subversion, which is explained [http://code.google.com/p/uispec/source/checkout here].
+
+
+Inside you will find
+
+ * The API documentation: doc/html/index.html
+ * The source code: src/
+ * The static library for use with iphone XCode projects: bin/UISpec/UISpec_X_Y.a
+ * The header files for use with the static library in your iphone XCode projects: bin/UISpec/Headers
+ * The XCode projects for building UISpec and running the demo: xcode/UISpec and xcode/UISpecDemo
+
+===Adding UISpec To Your Project===
+To add the UISpec static library and headers to your XCode project:
+
+ * From the Groups & Files pane, right click on the Frameworks (if it exists) folder or the Link Binary With Libraries folder and select
+   * Add -> Existing Files...
+
+ * Browse and Add
+   * ~/Dev/UISpec_X_Y/bin/UISpec/UISpec_X_Y.a
+    
+For each target you added it too, you should see the static library (.a) listed in the Link Binary With Libraries folder
+
+To add the headers:
+
+ * From the Groups & Files pane, double click the respective target or right click and select, Get Info, and then click on the Build tab.
+ * Under the setting, Header Search Paths, add "~/Dev/UISpec_X_Y/bin/UISpec/Headers"
+
+
+Note: The static library has been compiled for the both the simulator and the device.
+
+
+===What's Next===
+Now that you have installed UISpec, take a look at the [http://code.google.com/p/uispec/wiki/Documentation UISpec Documentation] will you will learn about writing specs and how to run them.
