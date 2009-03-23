@@ -1,0 +1,236 @@
+#summary One-sentence summary of this page.
+
+=UISpec=
+
+UISpec is a Behavior Driven Development framework for the iPhone that provides a full automated testing solution that drives the actual iPhone UI. It is modeled after the very popular RSpec for Ruby, where you express executable examples of the expected behavior of your code.
+
+Take for example a scenario where you are getting requirements from your customer on a new Employee Admin tool and you ask them to "describe" it.  They may say things like:
+
+ * It should show a list of current users
+ * It should add a user
+ * It should not add an invalid user
+
+In UISpec this is how we would express it using Objective-C:
+
+{{{
+@implementation DescribeEmployeeAdmin
+
+-(void)itShouldAShowAListofCurrentUsers {
+  ...
+}
+
+-(void)itShouldAddAUser {
+  ...
+}
+
+-(void)itShouldNotAddAnInvalidUser {
+  ...
+}
+
+@end
+}}}
+
+===Before and After===
+You can implement the methods "before" or "after" to define code that is run before or after each example in a description.  You can also implement the methods "beforeAll" or "afterAll" to define code that is run before all or after all examples in a description.
+
+{{{
+@implementation DescribeEmployeeAdmin
+  
+-(void)beforeAll {
+  //This is run once and only once, before all of the examples
+  //and before the "before" method.
+}
+
+-(void)before {
+  //This is run before each example
+}
+
+-(void)itShouldAShowAListofCurrentUsers {
+  ...
+}
+
+-(void)itShouldAddAUser {
+  ...
+}
+
+-(void)itShouldNotAddAnInvalidUser {
+  ...
+}
+
+-(void)after {
+  //This is run after each example
+}
+
+-(void)afterAll {
+  //This is run once and only once, after all of the examples
+  //and after the "after" method.
+}
+  
+@end
+}}}
+
+===Running Specs===
+Running your specs is as easy as calling {{{[UISpec runSpecs]}}}.  UISpec looks for all classes that conform to the protocol UISpec.  The protocol itself is used just as a marker and doesn't require any specific methods to be implemented.
+
+{{{
+@interface DescribeEmployeeAdmin : NSObject <UISpec> {
+}
+@end
+}}}
+
+On each class found, methods that have the prefix "it" are executed, and of course the beforeAll, before, afterAll, and after methods are run accordingly if they exist.
+
+The big question though is *where do you include this call to run your specs?*  The recommended place is in your "main" method.  And if your iPhone app takes a little time to load you can include an optional delay time.
+
+{{{
+int main(int argc, char *argv[]) {
+  NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+
+  [UISpec runSpecsAfterDelay:3]; //give your app some time to load before running the specs
+
+  int retVal = UIApplicationMain(argc, argv, nil, nil);
+  [pool release];
+  return retVal;
+}
+}}}
+
+=UIQuery=
+To make finding specific views in the iPhone UI easy, UISpec includes a very powerful view traversal DSL called UIQuery. Not only can you easily traverse the view heirarchy, you can also interact with the views you find.
+
+A UIQuery object contains list of views with logic for traversing and filtering them, most calls return a new UIQuery object which allows for property and method chaining.  For example if you wanted to touch the cell in a table with the text "My Chicago Trip" in order to see it's details, you can do the following:
+
+{{{
+[[app.tableViewCell.label.with text:@"My Chicago Trip"] touch];
+}}}
+
+===Traversal===
+Every traversal call is applied to each view in the current UIQuery object and returns a new UIQuery object with the resulting views.
+
+ * find/descendants - collects all the descendant views
+ * children - collects just the immediate child views
+ * parents - collects all parent views up to the UIApplication (top parent)
+
+If you don't call a traversal method, UIQuery will automatically call find/descendants for you, so the following are all equivalent:
+
+{{{
+app.navigationButon;
+app.find.navigationButton;
+app.descendants.navigationButton;
+}}}
+
+===Filters===
+Filters are meant for further refinement of a traversal call, so you can get to the exact view you are looking for.  A filter is applied across the list of views in the current UIQuery object, returning a filtered list in a new UIQuery object.
+
+ * view:classname - matches a view based on it's className
+ * with property:value ... - matches a view based on it's properties and values
+ * index:number - gets the view at the specified index in the UIQuery object's list of views
+ * first - gets the first view in the UIQuery object's list of views
+ * last - gets the last view in the UIQuery object's list of views
+
+UIQuery also provides predefined properties for view class names that help making coding easier.  Just take off the "UI" and lowercase the first letter and you can quickly filter most UIView subclasses.  For example if you wanted to get the text from the last cell in a table, both of these would work:
+
+{{{
+NSString *cellText = [[[app view:@"UITableView"] view:@"UITableViewCell"].last text];
+NSString *cellText = [app.tableView.tableViewCell.last text];
+}}}
+
+Using the method with is a very powerful way to dynamically match against almost any property on a UIView.  And you can match against as many properties as you need to all in one call.  For example:
+
+{{{
+[app.textField.with placeholder:@"Email"]; //looks for all UITextFields whose property "placeholder" contains the text Email
+[app.tableViewCell.with text:@"Sabre" accessoryType:UITableViewCellAccessoryCheckmark]; //looks for every UITableViewCell whose property "text" contains Sabre and property "accessoryType" is set to UITableViewCellAccessoryCheckmark
+}}}
+
+===View Interaction===
+As we all know a user interacts with the iPhone UI by touching it, so a UIQuery object provides a method called touch.  UIQuery also provides the methods show and flash which help with writing specs.  Calling one of these methods will get applied to each view in the list of views contained in the UIQuery object.
+
+ * touch - simulates a user touch on the target view
+ * show - reads all the properties on a view and logs them to the console
+ * flash - flashes the view on iPhone so you can see where it's located
+
+UIQuery also makes it easy to call existing methods or properties on the actual views you find.  If the method doesn't exist on a UIQuery object it will forward that call to the list of views it contains.  For example take a UITextField, if you wanted to set it's text you would call it's api method setText:somevalue or set its property .text = somevalue.  With UIQuery it's as simple as doing either of the following:
+
+{{{
+[[app.textField.with placeholder:@"email"] setText:@"somevalue"];
+//or by casting to a UITextField so you can access it's properties
+UITextField *textField = [app.textField.with placeholder:@"email"];
+textField.text = @"somevalue";
+}}}
+
+Dealing with some views can get quite complicated, so UIQuery provides several extension classes that provide simple methods that abstract a lot of verbose code.  Say you just wanted to scroll to the bottom of a UITableView.  Here is what the code would look like dealing directly with the UITableView:
+
+{{{
+UITableView *table = app.tableView;
+int numberOfSections = [table numberOfSections];
+int numberOfRowsInSection = [table numberOfRowsInSection:numberOfSections-1];
+NSIndexPath *indexPath = [NSIndexPath indexPathForRow:numberOfRowsInSection-1 inSection:numberOfSections-1];
+[table scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+}}}
+
+Fortunately underneath the scenes a tableView filter will actually return an subclass of UIQuery called UIQueryTableView which has the method scrollToBottom, so now you can do the following instead:
+
+{{{
+[app.tableView scrollToBottom];  //much nicer :)
+}}}
+
+===Timing Issues===
+Sometimes a view interaction will cause a longer than normal process to run, for example, touching a refresh button that makes a server call to reload the data on the screen.  This may take a few seconds, but if the next call to a UIQuery object is already running it will be looking for views that don't exist yet or whom contain stale data because the new ones haven't finished loading yet.  UIQuery provides the methods timeout and wait to help handle cases like this.
+
+ * timeout:seconds - tells UIQuery the amount of time to take when looking for a view, default is 10 seconds
+ * wait:seconds - causes UIQuery to halt it's processing for the specified amount of time, so other processes can finish
+
+By default if UIQuery cannot find a view you are looking for it will continue to look for it every half second up until a default timeout of ten seconds.  If by then it cannot find your view it will just return an empty UIQuery object.  You can change this default for the whole app or just for a specific call, like so:
+
+{{{
+app.timeout = 5; //now the default timeout for all calls on app is 5 seconds
+[app timeout:1].alertView //only take 1 second to look for alertView, every call following will go back to the default
+}}}
+
+Now let's say you wanted to get the value of a label that changes every time you click a button.  And it just so happens that calculating the new value for whatever reason takes about a second.  Using wait is a great way to handle this timing issue.  See the following:
+
+{{{
+UILabel *label = [app.label.with text@"initialValue"];
+UIQuery *button = [app.button.with currentTitle:@"Calculate"];
+
+button.touch; //this starts the calculation process
+[app wait:2.0]; //this gives the calculation at least 2 seconds to run before the next UIQuery call
+NSString *value = label.text; //now that we have waited 2 seconds we can get the correct value
+}}}
+
+Alternatively you can chain the wait call like so:
+
+{{{
+[button.touch wait:2];
+//or
+NSString *labelText = [[label wait:2] text];
+}}}
+
+
+=UIExpectation=
+UIExpectation let's you set expectations on your UIViews and is available on all UIQuery objects with the property "should".  If the expectation is met the spec continues, otherwise it fails.  Providing "not" will expect the opposite.
+
+{{{
+[label.should.have text@"User Profile"];
+[tableViewCell.should.not.have accessoryType:UITableViewCellAccessoryCheckmark];
+}}}
+
+===Should Exist===
+Calling the property exist will evaluate the UIQuery object to see if contains any resulting views.
+
+{{{
+app.alertView.should.exist;
+[[app.label.with text:@"Login"] should].not.exist;
+}}}
+
+===Should Have===
+The property have on a UIExpectation works in two ways 1) as a property matcher and 2) as a condition evaluation.  As a property matcher "have" dynamically looks at all the properties on a UIView and compares them to the provided values.  When evaluating a condition it matches against YES.
+
+{{{
+//As a property Matcher
+[app.textField.should.have placeholder:@"Email" text:"btknorr@gmail.com" textColor:[UIColor grayColor]];
+
+//As a condition evaluation
+UIQuery *tableView = app.tableView;
+int rows = [[tableView dataSource] tableView:tableView numberOfRowsInSection:0];
+[tableView.should have:(rows == 3)];
+}}}
