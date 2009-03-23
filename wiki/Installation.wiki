@@ -21,14 +21,14 @@ To add the UISpec static library and headers to your XCode project:
    * Add -> Existing Files...
 
  * Browse and Add
-   * ~/Dev/UISpec_X_Y/bin/UISpec/UISpec_X_Y.a
+   * [YOUR PATH TO UISPEC]/bin/UISpec/UISpec_X_Y.a
     
 For each target you added it too, you should see the static library (.a) listed in the Link Binary With Libraries folder
 
 To add the headers:
 
  * From the Groups & Files pane, double click the respective target or right click and select, Get Info, and then click on the Build tab.
- * Under the setting, Header Search Paths, add "~/Dev/UISpec_X_Y/bin/UISpec/Headers"
+ * Under the setting, Header Search Paths, "[YOUR PATH TO UISPEC]/bin/UISpec/Headers"
 
 
 Note: The static library has been compiled for the both the simulator and the device.
