@@ -2,6 +2,8 @@
 
 <wiki:toc max_depth="3"/>
 
+----
+
 =UISpec=
 
 UISpec is a Behavior Driven Development framework for the iPhone that provides a full automated testing solution that drives the actual iPhone UI. It is modeled after the very popular RSpec for Ruby, where you express executable examples of the expected behavior of your code.
@@ -95,6 +97,8 @@ int main(int argc, char *argv[]) {
   return retVal;
 }
 }}}
+
+----
 
 =UIQuery=
 To make finding specific views in the iPhone UI easy, UISpec includes a very powerful view traversal DSL called UIQuery. Not only can you easily traverse the view heirarchy, you can also interact with the views you find.
@@ -207,6 +211,7 @@ Alternatively you can chain the wait call like so:
 NSString *labelText = [[label wait:2] text];
 }}}
 
+----
 
 =UIExpectation=
 UIExpectation let's you set expectations on your UIViews and is available on all UIQuery objects with the property "should".  If the expectation is met the spec continues, otherwise it fails.  Providing "not" will expect the opposite.
