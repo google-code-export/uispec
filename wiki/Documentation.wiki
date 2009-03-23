@@ -120,7 +120,7 @@ When a traversal property is called on a UIQuery object, it will traverse the vi
 {{{
 [app.find.tableViewCell touch];  //This will touch the first UITableViewCell it finds
 [app.find.tableViewCell.all touch];  //This will touch the all the UITableViewCells it finds
-[[app.find.label.with text:@"Order Detail"] parents].tableViewCell; //This will find the tableViewCell that contains the label with the specified text
+[[app.find.label.with text:@"Order Detail"] parents].tableViewCell; //This will find the UITableViewCell that contains the label with the specified text
 }}}
 
 If you don't call a traversal method, UIQuery will automatically call find/descendants for you, so you can do the following instead:
@@ -128,7 +128,7 @@ If you don't call a traversal method, UIQuery will automatically call find/desce
 {{{
 [app.tableViewCell touch];  //This will touch the first UITableViewCell it finds
 [app.tableViewCell.all touch];  //This will touch the all the UITableViewCells it finds
-[[app.label.with text:@"Order Detail"] parents].tableViewCell; //This will find the tableViewCell that contains the label with the specified text
+[[app.label.with text:@"Order Detail"] parents].tableViewCell; //This will find the UITableViewCell that contains the label with the specified text
 }}}
 
 ===Filters===
