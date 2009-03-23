@@ -1,3 +1,7 @@
+#summary UISpec Documentation
+
+<wiki:toc max_depth="3"/>
+
 =UISpec=
 
 UISpec is a Behavior Driven Development framework for the iPhone that provides a full automated testing solution that drives the actual iPhone UI. It is modeled after the very popular RSpec for Ruby, where you express executable examples of the expected behavior of your code.
