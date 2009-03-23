@@ -1,7 +1,5 @@
 #summary How To Install UISpec.
 
-= Installation =
-
 ===Getting UISpec===
 Currently UISpec is available only through the repository.  Soon we will have a distribution zip that you can download. For now just:
 
