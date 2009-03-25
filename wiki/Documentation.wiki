@@ -107,6 +107,7 @@ A UIQuery object contains list of views with logic for traversing and filtering 
 
 {{{
 UIQuery *app = [UIQuery withApplication];  //this will get a handle to the UIApplication
+
 [[app.tableViewCell.label text:@"My Chicago Trip"] touch];
 }}}
 
