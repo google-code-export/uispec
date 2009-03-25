@@ -107,7 +107,7 @@ A UIQuery object contains list of views with logic for traversing and filtering 
 
 {{{
 UIQuery *app = [UIQuery withApplication];  //this will get a handle to the UIApplication
-[[app.tableViewCell.label.with text:@"My Chicago Trip"] touch];
+[[app.tableViewCell.label text:@"My Chicago Trip"] touch];
 }}}
 
 ===Traversal===
@@ -120,7 +120,7 @@ When a traversal property is called on a UIQuery object, it will traverse the vi
 {{{
 [app.find.tableViewCell touch];  //This will touch the first UITableViewCell it finds
 [app.find.tableViewCell.all touch];  //This will touch the all the UITableViewCells it finds
-[[app.find.label.with text:@"Order Detail"] parents].tableViewCell; //This will find the UITableViewCell that contains the label with the specified text
+[[app.find.label text:@"Order Detail"] parents].tableViewCell; //This will find the UITableViewCell that contains the label with the specified text
 }}}
 
 If you don't call a traversal method, UIQuery will automatically call find/descendants for you, so you can do the following instead:
@@ -128,7 +128,7 @@ If you don't call a traversal method, UIQuery will automatically call find/desce
 {{{
 [app.tableViewCell touch];  //This will touch the first UITableViewCell it finds
 [app.tableViewCell.all touch];  //This will touch the all the UITableViewCells it finds
-[[app.label.with text:@"Order Detail"] parents].tableViewCell; //This will find the UITableViewCell that contains the label with the specified text
+[[app.label text:@"Order Detail"] parents].tableViewCell; //This will find the UITableViewCell that contains the label with the specified text
 }}}
 
 ===Filters===
@@ -147,11 +147,18 @@ NSString *cellText = [[[app view:@"UITableView"] view:@"UITableViewCell"].last t
 NSString *cellText = [app.tableView.tableViewCell.last text];
 }}}
 
-Using the method with is a very powerful way to dynamically match against almost any property on a UIView.  And you can match against as many properties as you need to all in one call.  For example:
+Using the method "with" is a very powerful way to dynamically match against almost any property on a UIView.  And you can match against as many properties as you need to all in one call.  For example:
 
 {{{
 [app.textField.with placeholder:@"Email"]; //looks for all UITextFields whose property "placeholder" contains the text Email
 [app.tableViewCell.with text:@"Sabre" accessoryType:UITableViewCellAccessoryCheckmark]; //looks for every UITableViewCell whose property "text" contains Sabre and property "accessoryType" is set to UITableViewCellAccessoryCheckmark
+}}}
+
+In fact you don't even have to call "with", because by default if UIQuery or it's contained views don't respond to a message, then it just assumes you are doing a "with" property match.  So the following works too:
+
+{{{
+[app.textField placeholder:@"Email"]; //looks for all UITextFields whose property "placeholder" contains the text Email
+[app.tableViewCell text:@"Sabre" accessoryType:UITableViewCellAccessoryCheckmark]; //looks for every UITableViewCell whose property "text" contains Sabre and property "accessoryType" is set to UITableViewCellAccessoryCheckmark
 }}}
 
 ===View Interaction===
@@ -164,9 +171,9 @@ As we all know a user interacts with the iPhone UI by touching it, so a UIQuery 
 UIQuery also makes it easy to call existing methods or properties on the actual views you find.  If the method doesn't exist on a UIQuery object it will forward that call to the *first* view it contains.  To forward the call to all the contained views, call the property "all" beforehand.  For example take a UITextField, if you wanted to set it's text you would call it's api method setText:somevalue or set its property .text = somevalue.  With UIQuery it's as simple as doing either of the following:
 
 {{{
-[[app.textField.with placeholder:@"email"] setText:@"somevalue"];
+[[app.textField placeholder:@"email"] setText:@"somevalue"];
 //or by casting to a UITextField so you can access it's properties
-UITextField *textField = [app.textField.with placeholder:@"email"];
+UITextField *textField = [app.textField placeholder:@"email"];
 textField.text = @"somevalue";
 }}}
 
@@ -202,8 +209,8 @@ app.timeout = 5; //now the default timeout for all calls on app is 5 seconds
 Now let's say you wanted to get the value of a label that changes every time you click a button.  And it just so happens that calculating the new value for whatever reason takes about a second.  Using wait is a great way to handle this timing issue.  See the following:
 
 {{{
-UILabel *label = [app.label.with text@"initialValue"];
-UIQuery *button = [app.button.with currentTitle:@"Calculate"];
+UILabel *label = [app.label text@"initialValue"];
+UIQuery *button = [app.button currentTitle:@"Calculate"];
 
 button.touch; //this starts the calculation process
 [app wait:2.0]; //this gives the calculation at least 2 seconds to run before the next UIQuery call
