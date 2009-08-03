@@ -112,11 +112,11 @@ UIQuery *app = [UIQuery withApplication];  //this will get a handle to the UIApp
 }}}
 
 ===Traversal===
-When a traversal property is called on a UIQuery object, it will traverse the view hierarchy in the respective direction collecting the views into a new UIQuery object.  Since a UIQuery object itself contains a list of views, by default the *first* view is used as the starting point for the traversal.  If you want to traverse all the views in a UIQuery object call the property "all" beforehand.  
+When a traversal property is called on a UIQuery object, it tells UIQuery which direction to traverse the view hierarchy when collecting views into a new UIQuery object.  Since a UIQuery object itself contains a list of views, by default the *first* view is used as the starting point for the traversal.  If you want to traverse all the views in a UIQuery object call the property "all" beforehand.  
 
- * find/descendants - collects all the descendant views
- * children - collects just the immediate child views
- * parents - collects all parent views up to the UIApplication (top parent)
+ * find/descendant - collect views in the descendant direction
+ * child - collect just the immediate child views
+ * parent - collect all parent views up to the UIApplication (top parent)
 
 {{{
 [app.find.tableViewCell touch];  //This will touch the first UITableViewCell it finds
@@ -124,7 +124,7 @@ When a traversal property is called on a UIQuery object, it will traverse the vi
 [[app.find.label text:@"Order Detail"] parents].tableViewCell; //This will find the UITableViewCell that contains the label with the specified text
 }}}
 
-If you don't call a traversal method, UIQuery will automatically call find/descendants for you, so you can do the following instead:
+If you don't call a traversal method, UIQuery will automatically call find/descendant for you, so you can do the following instead:
 
 {{{
 [app.tableViewCell touch];  //This will touch the first UITableViewCell it finds
