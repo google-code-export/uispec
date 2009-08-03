@@ -116,7 +116,7 @@ When a traversal property is called on a UIQuery object, it tells UIQuery which 
 
  * find/descendant - collect views in the descendant direction
  * child - collect just the immediate child views
- * parent - collect all parent views up to the UIApplication (top parent)
+ * parent - collect parent views up to the UIApplication (top parent)
 
 {{{
 [app.find.tableViewCell touch];  //This will touch the first UITableViewCell it finds
