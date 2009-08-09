@@ -277,16 +277,64 @@ UIScript is in it's experimental stage right now, so please use it with caution.
 
 UIScript's goal is to provide a simple lightweight scripting language that supports all the functionality of UISpec, but without having to write Objective-C code.  Instead you write UIScript which is very similar to Smalltalk.
 
-Currently UIScript only supports straight commands, which means there is no support for things like variables and loops or decisions (for, while, if else, etc...).  And right now UISpec recognizes only Strings, Integers, and BOOLs.
+Currently UIScript only supports straight messages, which means there is no support for things like variables and loops or decisions (for, while, if else, etc...).  And right now UISpec recognizes only Strings, Integers, and BOOLs.
 
 You can run a script in your test by calling the C function:
 {{{
 UIQuery * $(NSString *script, ...);
 }}}
 
-The only real difference in writing UIScript vs Objective-C is that you take out all the dot notation and brackets, and replace Strings like @"Hello" with 'Hello'.
+===Messages===
 
-Here is the itShouldUpdateUserRoles example rewritten using UIScript
+Like in Objective-C, UIScript is based on sending messages to objects.  The only real difference in writing UIScript vs Objective-C is that you take out all the dot notation and brackets.
+
+{{{
+$(@"navigationButton touch");
+$(@"tableView tableViewCell all should not be selected");
+}}}
+
+As you can see it's very similar to what you are used to writing, except without all the syntactic sugar, making the script even more readable.
+
+===Strings===
+
+Strings in UISpec are just quoted values like 'Hello' or 'Good Bye', and there is no need to use the @ symbol as a prefix like you do in Objective-C.
+
+{{{
+$(@"navigationButton label text:'Save' touch");
+
+$(@"textField placeholder:'Username' setText:'bkuser'");
+//If you need to include a String dynamically just use NSString formatting
+$(@"textField placeholder:'Username' setText:'%@'", [Config userName]);
+}}}
+
+===Integers===
+
+Currently Integers are the only number support in UIScript.  We hope to have support for decimals very soon.
+
+{{{
+$(@"tableView should have numberOfSections:3");
+
+$(@"label text:'Returns' parent tableViewCell should have accessoryType:3");
+//Or you can use NSString formatting
+$(@"label text:'Returns' parent tableViewCell should have accessoryType:%d", UITableViewCellAccessoryCheckmark);
+}}}
+
+===BOOLs===
+
+The BOOLs YES and NO are also supported in UIScript.
+
+{{{
+$(@"tableView tableViewCell first should have isSelected:YES");
+$(@"tableView tableViewCell last should have isSelected:NO");
+
+//Or you can use NSString formatting
+int rows = $(@"tableView numberOfRowsInSection:0");
+$(@"tableView should have:%@", rows==3);
+}}}
+
+===Example===
+
+Here is the itShouldUpdateUserRoles example from the demo rewritten using UIScript
 {{{
 -(void)itShouldUpdateUserRoles {
   [self addTestUser];
