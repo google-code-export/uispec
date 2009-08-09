@@ -286,7 +286,7 @@ UIQuery * $(NSString *script, ...);
 
 The only real difference in writing UIScript vs Objective-C is that you take out all the dot notation and brackets, and replace Strings like @"Hello" with 'Hello'.
 
-Here is the itShouldUpdateUserRoles example rewritten using UISpec
+Here is the itShouldUpdateUserRoles example rewritten using UIScript
 {{{
 -(void)itShouldUpdateUserRoles {
   [self addTestUser];
@@ -300,7 +300,7 @@ Here is the itShouldUpdateUserRoles example rewritten using UISpec
   $(@"label text:'Returns' parent tableViewCell should have accessoryType:%d", UITableViewCellAccessoryCheckmark);
 	
   $(@"label text:'Returns' touch");
-  $(@"label text:'Returns' parent tableViewCell should have accessoryType:UITableViewCellAccessoryNone];
+  $(@"label text:'Returns' parent tableViewCell should have accessoryType:%d", UITableViewCellAccessoryNone);
 	
   $(@"view:'UINavigationItemButtonView' touch");
   $(@"view:'UINavigationItemButtonView' touch");
