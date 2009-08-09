@@ -270,3 +270,41 @@ The property be on a UIExpectation checks against the returned BOOL from a prope
 //'selected' is a property on UITableViewCell, here we make sure the last one is 'selected'
 [app.tableView.tableViewCell.last.should.be selected];
 }}}
+
+=UIScript=
+
+UIScript is in it's experimental stage right now, so please use it with caution.
+
+UIScript's goal is to provide a simple lightweight scripting language that supports all the functionality of UISpec, but without having to write Objective-C code.  Instead you write UIScript which is very similar to Smalltalk.
+
+Currently UIScript only supports straight commands, which means there is no support for things like variables and loops or decisions (for, while, if else, etc...).  And right now UISpec recognizes only Strings, Integers, and BOOLs.
+
+You can run a script in your test by calling the C function:
+{{{
+UIQuery * $(NSString *script, ...);
+}}}
+
+The only real difference in writing UIScript vs Objective-C is that you take out all the dot notation and brackets, and replace Strings like @"Hello" with 'Hello'.
+
+Here is the itShouldUpdateUserRoles example rewritten using UISpec
+{{{
+-(void)itShouldUpdateUserRoles {
+  [self addTestUser];
+
+  $(@"label with text:'Brian Knorr' touch");
+  $(@"label text:'User Roles' touch");
+
+  $(@"tableView scrollToBottom");
+  $(@"label text:'Returns' touch");
+  $(@"label text:'Returns' parent tableViewCell should be selected");
+  $(@"label text:'Returns' parent tableViewCell should have accessoryType:%d", UITableViewCellAccessoryCheckmark);
+	
+  $(@"label text:'Returns' touch");
+  $(@"label text:'Returns' parent tableViewCell should have accessoryType:UITableViewCellAccessoryNone];
+	
+  $(@"view:'UINavigationItemButtonView' touch");
+  $(@"view:'UINavigationItemButtonView' touch");
+
+  [self deleteTestUser];
+}
+}}}
