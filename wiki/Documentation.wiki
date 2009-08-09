@@ -267,6 +267,6 @@ int rows = [[tableView dataSource] tableView:tableView numberOfRowsInSection:0];
 The property be on a UIExpectation checks against the returned BOOL from a property or method on the underlying UIView.
 
 {{{
-//'selected' is a property on UITableViewCell, here we make sure the first one is 'selected'
-[app.tableView.tableViewCell.first.should.be selected];
+//'selected' is a property on UITableViewCell, here we make sure the last one is 'selected'
+[app.tableView.tableViewCell.last.should.be selected];
 }}}
