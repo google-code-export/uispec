@@ -237,6 +237,9 @@ UIExpectation let's you set expectations on your UIViews and is available on a U
 
 //Make sure all the table cells are checked
 [app.tableView.tableViewCell.all.should.have accessoryType:UITableViewCellAccessoryCheckmark];
+
+//Make sure no table cells are selected
+[app.tableView.tableViewCell.all.should.not.be selected];
 }}}
 
 ===Should Exist===
