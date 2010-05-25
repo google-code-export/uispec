@@ -11,6 +11,7 @@ Inside you will find
  * The API documentation: doc/html/index.html
  * The source code: src/
  * The static library for use with iphone XCode projects: bin/UISpec/UISpec_X_Y.a
+ * The bundle for use with UIBug: bin/UISpec/UISpec.bundle
  * The header files for use with the static library in your iphone XCode projects: bin/UISpec/Headers
  * The XCode projects for building UISpec and running the demo: xcode/UISpec and xcode/UISpecDemo
 
@@ -30,6 +31,11 @@ To add the headers:
  * From the Groups & Files pane, double click the respective target or right click and select, Get Info, and then click on the Build tab.
  * Under the setting, Header Search Paths, "{YOUR PATH TO UISPEC}/bin/UISpec/Headers"
 
+To add the bundle:
+
+ * From the Groups & Files pane, right click on a folder and select
+   * Add -> Existing Files...
+   * From here just select the UISpec.bundle found in the bin/UISpec folder
 
 Note: The static library has been compiled for the both the simulator and the device.
 
