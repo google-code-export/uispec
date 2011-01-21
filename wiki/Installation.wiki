@@ -15,7 +15,7 @@ Inside you will find
  * The header files for use in your iphone XCode project: headers/
 
 ===Adding UISpec To Your Project===
-To add the UISpec static library and headers to your XCode project:
+To add the UISpec project and headers to your iphone XCode project:
 
  * Drag UISpec.xcodeproj and drop it onto the root of your Xcode project's "Groups and Files" sidebar. A dialog will appear -- make sure "Copy items" is NOT checked and "Reference Type" is "Relative to Project" before clicking "Add".
 
