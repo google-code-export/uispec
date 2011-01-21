@@ -10,7 +10,7 @@ Inside you will find
 
  * The API documentation: doc/html/index.html
  * The source code: src/
- * The UISpec XCode Project you will be adding your iphone XCode project: xcode/UISpec/UISpec.xcodeproj
+ * The UISpec XCode Project you will be adding to your iphone XCode project: xcode/UISpec/UISpec.xcodeproj
  * The bundle for use with UIBug: src/UISpec.bundle
  * The header files for use in your iphone XCode project: headers/
 
