@@ -1,8 +1,16 @@
 
 #import "UIQueryTableView.h"
-
+#import "UIQueryTableViewCell.h"
+#import "UIProxy.h"
+#import <objc/runtime.h>
 
 @implementation UIQueryTableView
+
+-(UIQuery *)scrollToTop {
+	UITableView *table = (UITableView *)self;
+	[table setContentOffset:CGPointZero animated:YES];
+	return [UIQuery withViews:views className:className];
+}
 
 -(UIQuery *)scrollToBottom {
 	UITableView *table = (UITableView *)self;

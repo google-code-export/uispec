@@ -9,11 +9,12 @@
 #import "UIQuery.h"
 
 @interface UIQueryTableView : UIQuery {
-
+    NSMutableArray *tableViewCells;
 }
-
+-(UIQuery *)scrollToTop;
 -(UIQuery *)scrollToBottom;
 -(UIQuery *)scrollDown:(int)numberOfRows;
+-(UIQuery *)tableViewCell;
 -(NSArray *)rowIndexPathList;
 
 @end

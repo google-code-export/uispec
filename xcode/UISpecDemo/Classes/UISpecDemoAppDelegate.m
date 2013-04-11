@@ -9,7 +9,7 @@
 
 
 - (void)applicationDidFinishLaunching:(UIApplication *)application {    
-
+    
 	EmployeeAdmin *employeeAdmin = [[[EmployeeAdmin alloc] initWithFrame:[window frame]] autorelease];
 	[[ApplicationFacade getInstance] startup:employeeAdmin];
 	[window addSubview:employeeAdmin];
@@ -18,7 +18,6 @@
 
 
 - (void)dealloc {
-    [window release];
     [super dealloc];
 }
 

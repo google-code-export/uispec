@@ -30,6 +30,13 @@
 @synthesize first, last, all, redo;
 @synthesize exists;
 
+static int defaultTimeout = 10;
+
++(id)withApplicationAndDefaultTimeout:(int)seconds {
+    defaultTimeout = seconds;
+	return [self withViews:[NSMutableArray arrayWithObject:[UIApplication sharedApplication]] className:NSStringFromClass([UIApplication class])];
+}
+
 +(id)withApplication {
 	return [self withViews:[NSMutableArray arrayWithObject:[UIApplication sharedApplication]] className:NSStringFromClass([UIApplication class])];
 }
@@ -62,16 +69,36 @@
 }
 
 +(id)withViews:(NSMutableArray *)views className:(NSString *)className {
-	return [UIRedoer withTarget:[[[self alloc] initWithViews:views className:className filter:NO] autorelease]];
+	return [UIQuery withViews:views className:className filter:NO];
 }
 
 +(id)withViews:(NSMutableArray *)views className:(NSString *)className filter:(BOOL)filter {
-	return [UIRedoer withTarget:[[[self alloc] initWithViews:views className:className filter:filter] autorelease]];
+    if ([className isEqualToString:@"UITableViewCell"]) {
+		return [UIRedoer withTarget:[[[UIQueryTableViewCell alloc] initWithViews:views className:className filter:filter] autorelease]];
+    }
+    else if ([className isEqualToString:@"UITableView"]) {
+		return [UIRedoer withTarget:[[[UIQueryTableView alloc] initWithViews:views className:className filter:filter] autorelease]];
+    }
+	else if ([className isEqualToString:@"UISearchBar"]) {
+		return [UIRedoer withTarget:[[[UIQuerySearchBar alloc] initWithViews:views className:className filter:filter] autorelease]];
+    }
+	else if ([className isEqualToString:@"UITabBar"]) {
+		return [UIRedoer withTarget:[[[UIQueryTabBar alloc] initWithViews:views className:className filter:filter] autorelease]];
+	}
+	else if ([className isEqualToString:@"UISegmentedControl"]) {
+		return [UIRedoer withTarget:[[[UIQuerySegmentedControl alloc] initWithViews:views className:className filter:filter] autorelease]];
+	}
+	else if ([className isEqualToString:@"UIWebView"]) {
+		return [UIRedoer withTarget:[[[UIQueryWebView alloc] initWithViews:views className:className filter:filter] autorelease]];
+	}
+	else {
+		return [UIRedoer withTarget:[[[UIQuery alloc] initWithViews:views className:className filter:filter] autorelease]];
+	}
 }
 
 -(id)initWithViews:(NSMutableArray *)_views className:(NSString *)_className filter:(BOOL)_filter {
 	if (self = [super init]) {
-		self.timeout = 10;
+		self.timeout = defaultTimeout;
 		self.views = _views;
 		self.className = _className;
 		filter = _filter;
@@ -79,8 +106,8 @@
 	return self;
 }
 
--(NSArray *)collect:(NSArray *)views {
-	return [[[[UIDescendants alloc] init] autorelease] collect:views];
+-(NSArray *)collect:(NSArray *)_views {
+	return [[[[UIDescendants alloc] init] autorelease] collect:_views];
 }
 
 -(UIQuery *)target {
@@ -138,26 +165,7 @@
 		}
 		self.redo;
 	}
-	if ([className isEqualToString:@"UITableViewCell"]) {
-		return [UIQueryTableViewCell withViews:array className:className];
-	} else if ([className isEqualToString:@"UITableView"]) {
-		return [UIQueryTableView withViews:array className:className];
-	} 
-	else if ([className isEqualToString:@"UISearchBar"]) {
-		return [UIQuerySearchBar withViews:array className:className];
-	}
-	else if ([className isEqualToString:@"UITabBar"]) {
-		return [UIQueryTabBar withViews:array className:className];
-	}
-	else if ([className isEqualToString:@"UISegmentedControl"]) {
-		return [UIQuerySegmentedControl withViews:array className:className];
-	}
-	else if ([className isEqualToString:@"UIWebView"]) {
-		return [UIQueryWebView withViews:array className:className];
-	}
-	else {
-		return [UIQuery withViews:array className:className];
-	}
+    return [UIQuery withViews:array className:className];
 }
 
 -(UIQuery *)marked:(NSString *)mark {
@@ -165,6 +173,7 @@
 }
  
 -(UIQuery *)wait:(double)seconds {
+    //NSLog(@"WAITING %d", seconds);
 	CFRunLoopRunInMode(kCFRunLoopDefaultMode, seconds, false);
 	return [UIQuery withViews:views className:className];
 }
@@ -185,7 +194,9 @@
 }
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {
+    //NSLog(@"UIQuery methodSignatureForSelector %@", NSStringFromSelector(aSelector));
 	if ([UIQuery instancesRespondToSelector:aSelector]) {
+        //NSLog(@"UIQuery instancesRespondToSelector %@", NSStringFromSelector(aSelector));
 		return [super methodSignatureForSelector:aSelector];
 	}
 	
@@ -194,6 +205,7 @@
 	
 	for (UIView *target in [self targetViews]) {
 		if ([target respondsToSelector:aSelector]) {
+            //NSLog(@"UIQuery target respondsToSelector");
 			return [target methodSignatureForSelector:aSelector];
 		}
 	}
@@ -207,20 +219,23 @@
 }
 
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
+    //NSLog(@"UIQuery forwardInvocation");
 	BOOL isDirect = NO;
 	for (UIView *target in [self targetViews]) {
 		if ([target respondsToSelector:[anInvocation selector]]) {
+            //NSLog(@"UIQuery target respondsToSelector");
 			[anInvocation invokeWithTarget:target];
 			isDirect = YES;
 		}
 	}
-	
+	//NSLog(@"UIQuery forwardInvocation isDirect=%d",isDirect);
 	if (!isDirect) {
 		[[[UIRedoer withTarget:self] with] forwardInvocation:anInvocation];
 	}
 }
 
 - (BOOL)respondsToSelector:(SEL)aSelector {
+    //NSLog(@"UIQuery respondsToSelector");
 	if ([UIQuery instancesRespondToSelector:aSelector]) {
 		return YES;
 	}
@@ -415,7 +430,7 @@
 }
 
 -(NSString *)description {
-	return [NSString stringWithFormat:@"UIQuery: %@", [views description]];
+	return [NSString stringWithFormat:@"%@", [views description]];
 }
 
 -(void)logRange:(NSString *)prefix range:(NSRange)range {
@@ -430,70 +445,6 @@
 }
 
 @end
-
-UIQuery * $(NSMutableString *script, ...) {
-	va_list args;
-	va_start(args, script);
-	script = [[[NSMutableString alloc] initWithFormat:script arguments:args] autorelease];
-	va_end(args);
-	
-	UIQuery *result = [UIQuery withApplication];
-	//NSLog(@"script = %@, length = %d", script, script.length);
-	
-	NSMutableArray *strings = [NSMutableArray array];
-	NSArray *stringParams = [script componentsSeparatedByString:@"'"];
-	//NSLog(@"stringParams = %@", stringParams);
-	if (stringParams.count > 1) {
-		for (int i=1; i<stringParams.count; i=i+2) {
-			[strings addObject:[stringParams objectAtIndex:i]];
-			[script replaceOccurrencesOfString:[NSString stringWithFormat:@"'%@'", [stringParams objectAtIndex:i]] withString:@"BIGFATGUYWITHPIGFEET" options:NSLiteralSearch range:NSMakeRange(0, [script length])];
-		}
-	} else {
-		stringParams = [script componentsSeparatedByString:@"\""];
-		//NSLog(@"stringParams = %@", stringParams);
-		if (stringParams.count > 1) {
-			for (int i=1; i<stringParams.count; i=i+2) {
-				[strings addObject:[stringParams objectAtIndex:i]];
-				[script replaceOccurrencesOfString:[NSString stringWithFormat:@"\"%@\"", [stringParams objectAtIndex:i]] withString:@"BIGFATGUYWITHPIGFEET" options:NSLiteralSearch range:NSMakeRange(0, [script length])];
-			}
-		}
-	}
-	//NSLog(@"script = %@", script);
-	//NSLog(@"strings = %@", strings);
-	
-	NSArray *commands = [script componentsSeparatedByString:@" "];
-	//NSLog(@"commands = %@", commands);
-	
-	int stringCount = 0;
-	for (NSString *command in commands) {
-		NSArray *commandAndParam = [command componentsSeparatedByString:@":"];
-		NSString *commandValue = [commandAndParam objectAtIndex:0];
-		//NSLog(@"commandValue = %@", commandValue);
-		NSString *param = nil;
-		if (commandAndParam.count > 1) {
-			param = [commandAndParam objectAtIndex:1];
-		}
-		if (param != nil) {
-			id paramValue = nil;
-			if ([param isEqualToString:@"BIGFATGUYWITHPIGFEET"]) {
-				paramValue = [strings objectAtIndex:stringCount];
-				stringCount++;
-				//NSLog(@"paramValue = %@", paramValue);
-			} else if ([param isEqualToString:@"YES"] || [param isEqualToString:@"NO"]) {
-				paramValue = [param isEqualToString:@"YES"];
-				//NSLog(@"paramValue = %d", paramValue);
-			} else {
-				paramValue = [param intValue];
-				//NSLog(@"paramValue = %d", paramValue);
-			}
-			result = [result performSelector:NSSelectorFromString([NSString stringWithFormat:@"%@:", commandValue]) withObject:paramValue];
-		} else {
-			result = [result performSelector:NSSelectorFromString(commandValue)];
-		}
-		//NSLog(@"result = %@", result);
-	}
-	return result;
-}
 
 //
 //  TouchSynthesis.m

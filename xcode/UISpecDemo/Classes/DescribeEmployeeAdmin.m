@@ -1,10 +1,11 @@
 #import "DescribeEmployeeAdmin.h"
 #import "UIBug.h"
+#import "NSNumberCreator.h"
 
 @implementation DescribeEmployeeAdmin
 
 -(void)beforeAll {
-	app = [[UIQuery withApplication] retain];
+	app = [[UIQuery withApplicationAndDefaultTimeout:10] retain];
 	[UIBug bugAtPoint:CGPointMake(0, 465)];
 }
 
@@ -29,7 +30,7 @@
 
 -(void)itShouldShowListOfDefaultUsers {
 	[expectThat([app.tableView.label text:@"Larry Stooge"]) should].exist;
-	[expectThat([app.tableView.label text:@"Curly Stooge"]) should].exist;
+	[expectThat([app.tableView.label text:@"Curly's Stooge"]) should].exist;
 	[expectThat([app.tableView.label text:@"Moe Stooge"]) should].exist;
 	
 	UIQuery *tableView = app.tableView;
@@ -73,12 +74,41 @@
 	[self deleteTestUser];
 }
 
+
+
+//-(void)itShouldGo {
+//    $(@"label text:'Curly's Stooge' touch");
+//    [[app.label index:1] setText:@"wwwww"];
+//    $(@"label index:1 setText:'wowo'");
+//    $(@"show");
+//    
+//    id result;
+//    NSString *commandValue = @"windows";
+//    NSMethodSignature *signature = [[UIApplication sharedApplication] methodSignatureForSelector:NSSelectorFromString(commandValue)];
+//    NSString *returnType = [NSString stringWithFormat:@"%s", [signature methodReturnType]];
+//    NSLog(@"**Return Type = %@", returnType);
+//    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+//    [invocation setTarget:[UIApplication sharedApplication]];
+//    [invocation setSelector:NSSelectorFromString(commandValue)];
+//    [invocation invoke];
+//
+//    
+//    
+//    unsigned int length = [[invocation methodSignature] methodReturnLength];
+//    void *buffer = (void *)malloc(length);
+//    [invocation getReturnValue:buffer];
+//    result = [NSNumberCreator numberWithValue:buffer objCType:[signature methodReturnType]];
+//    
+//    NSLog(@"rect = %@",result);
+    //$(@"accessibilityFrame");
+//}
+
 -(void)itShouldUpdateUserRoles {
 	[self addTestUser];
-	[[app.label.with text:@"Brian Knorr"] touch];
-	[[app.label text:@"User Roles"] touch];
-
-	[app.tableView scrollDown:4];
+    $(@"label text:'Brian Knorr' touch");
+    $(@"label with text:'User Roles' touch");
+    
+    $(@"tableViewCell all label text:'Returns' parent tableViewCell scrollTo");
 
 	[[app.label text:@"Returns"] touch];
 	[app wait:.5];

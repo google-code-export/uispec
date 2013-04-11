@@ -16,12 +16,13 @@
 }
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {
+    //NSLog(@"methodSignatureForSelector");
 	return [target methodSignatureForSelector:aSelector];
 }
 
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
+    //NSLog(@"forwardInvocation");
 	//NSLog(@"**Recordable forwardInvocation selector %@", NSStringFromSelector(anInvocation.selector));
-	//[anInvocation retainArguments];
 	NSString *returnType = [NSString stringWithFormat:@"%s", [[anInvocation methodSignature] methodReturnType]];
 	if (![returnType isEqualToString:@"v"]) {
 		[anInvocation setReturnValue:&self];
@@ -30,11 +31,13 @@
 }
 
 - (BOOL)respondsToSelector:(SEL)aSelector {
+    //NSLog(@"respondsToSelector");
 	return [target respondsToSelector:aSelector];
 }
 
 -(id)play {
-	NSLog(@"**START playing %@", NSStringFromSelector(invocation.selector));
+    //NSLog(@"play");
+	//NSLog(@"**START playing %@", NSStringFromSelector(invocation.selector));
 	[invocation setTarget:target];
 	[invocation invoke];
 	NSString *returnType = [NSString stringWithFormat:@"%s", [[invocation methodSignature] methodReturnType]];
