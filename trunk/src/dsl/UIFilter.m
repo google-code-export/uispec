@@ -43,7 +43,6 @@
 			int matchCount = 0;
 			int i = 2;
 			id value = nil;
-			id resultValue = nil;
 			for (NSString *key in selectors) {
 				if (![key isEqualToString:@""]) {
 					SEL selector = NSSelectorFromString(key);
@@ -52,15 +51,29 @@
 					}
 					[anInvocation getArgument:&value atIndex:i++];
 					NSString *returnType = [NSString stringWithFormat:@"%s", [[view methodSignatureForSelector:selector] methodReturnType]];
-					//NSLog(@"selector = %@ and returnType = %@", key, returnType);
+					//NSLog(@"value = %@ and selector = %@ and returnType = %@", value, key, returnType);
 					if ([returnType isEqualToString:@"@"]) {
+                        id resultValue = nil;
 						if ([value isKindOfClass:[NSString class]]) {
-							if ([[view performSelector:selector] rangeOfString:value].length != 0) {
+                            BOOL exact = YES;
+                            if ([[value substringToIndex:1] isEqualToString:@"/"]) {
+                                if ([[value substringFromIndex:[value length]-1] isEqualToString:@"/"]) {
+                                    value = [value substringWithRange:NSMakeRange(1, [value length]-2)];
+                                    exact = NO;
+                                }
+                            }
+                            resultValue = [view performSelector:selector];
+                            //NSLog(@"exact = %d and value = %@ and resultValue = %@", exact, value, resultValue);
+                            if (exact){
+                                if ([resultValue isEqual:value]) {
+                                    matchCount++;
+                                }
+							} else if ([resultValue rangeOfString:value].length != 0) {
 								matchCount++;
 							}
-						} else if ([[view performSelector:selector] isEqual:value]) {
+						} else if ([resultValue isEqual:value]) {
 							matchCount++;
-						} else if ([view performSelector:selector] == value) {
+						} else if (resultValue == value) {
 							matchCount++;
 						}
 					} else {

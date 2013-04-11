@@ -47,13 +47,15 @@
 
 #import <UIKit/UIKit.h>
 #import "UISpec.h"
+#import "UIScript.h"
 
 int main(int argc, char *argv[])
 {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	
-	[UISpec runSpecsAfterDelay:2];
-	//[UISpec runSpec:@"DescribeTextFields" afterDelay:2];
+	//[UISpec runSpecsAfterDelay:2];
+	[UISpec runSpec:@"DescribeWebView" afterDelay:2];
+    [UIScript runOnPort:12345];
 	
     int retVal = UIApplicationMain(argc, argv, nil, nil);
     [pool release];

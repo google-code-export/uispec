@@ -11,8 +11,6 @@
 @interface UIQueryWebView : UIQuery {
 	
 }
--(UIQuery *)setValue:(NSString *)value forElementWithId:(NSString *)elementId;
--(UIQuery *)clickElementWithId:(NSString *)elementId;
--(NSString *)html;
+-(NSString *) evalJS:(NSString *)script;
 
 @end

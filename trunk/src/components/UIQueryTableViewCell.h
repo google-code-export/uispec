@@ -9,9 +9,12 @@
 #import "UIQuery.h"
 
 @interface UIQueryTableViewCell : UIQuery {
-
+    UITableView *parentTable;
 }
 
--(void)delete;
++(void)associateIndexPath:(UITableViewCell *)tableViewCell indexPath:(NSIndexPath *)indexPath;
++(void)associateTableView:(UITableViewCell *)tableViewCell tableView:(UITableView *)tableView;
+-(UIQuery *)delete;
+-(UIQuery *)scrollTo;
 
 @end

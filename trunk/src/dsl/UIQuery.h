@@ -10,8 +10,6 @@
 
 @class UIFilter, UIRedoer;
 
-UIQuery * $(NSMutableString *script, ...);
-
 @interface UIQuery : ViewFilterSwizzler {
 	UIQuery *first, *last, *all, *redo;
 	UIFilter *with;
@@ -42,7 +40,6 @@ UIQuery * $(NSMutableString *script, ...);
 -(UIQuery *)parent;
 -(UIQueryExpectation *)should;
 -(UIFilter *)with;
--(id)initWithViews:(NSMutableArray *)_views className:(NSString *)_className filter:(BOOL)_filter;
 -(NSArray *)collect:(NSArray *)views;
 -(UIQuery *)target;
 -(NSArray *)targetViews;
@@ -69,6 +66,7 @@ UIQuery * $(NSMutableString *script, ...);
 -(void)logRange:(NSString *)prefix range:(NSRange)range;
 
 +(id)withApplication;
++(id)withApplicationAndDefaultTimeout:(int)seconds;
 +(NSDictionary *)describe:(id)object;
 +(void)show:(NSArray *)views;
 +(id)withViews:(NSMutableArray *)views className:(NSString *)className;

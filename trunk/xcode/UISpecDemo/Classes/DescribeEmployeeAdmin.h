@@ -7,6 +7,7 @@
 //
 #import "UISpec.h"
 #import "UIQuery.h"
+#import "UIScript.h"
 #import "UIExpectation.h"
 
 @interface DescribeEmployeeAdmin : NSObject <UISpec>{

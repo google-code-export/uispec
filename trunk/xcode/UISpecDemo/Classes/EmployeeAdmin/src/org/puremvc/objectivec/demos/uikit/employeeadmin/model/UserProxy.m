@@ -16,7 +16,7 @@
 	self.proxyName = [UserProxy NAME];
 	self.data = [NSMutableArray array];
 	[self create:[UserVO withUserName:@"lstooge" firstName:@"Larry" lastName:@"Stooge" email:@"larry@stooges.com" password:@"ijk456" confirmPassword:@"ijk456" department:@"Accounting"]];
-	[self create:[UserVO withUserName:@"cstooge" firstName:@"Curly" lastName:@"Stooge" email:@"curly@stooges.com" password:@"xyz987" confirmPassword:@"xyz987" department:@"Sales"]];
+	[self create:[UserVO withUserName:@"cstooge" firstName:@"Curly's" lastName:@"Stooge" email:@"curly@stooges.com" password:@"xyz987" confirmPassword:@"xyz987" department:@"Sales"]];
 	[self create:[UserVO withUserName:@"mstooge" firstName:@"Moe" lastName:@"Stooge" email:@"moe@stooges.com" password:@"abc123" confirmPassword:@"abc123" department:@"Plant"]];
 }
 

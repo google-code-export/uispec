@@ -13,6 +13,8 @@
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		2F51F20A10EED09600FBCA7C /* DescribeWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F51F20910EED09600FBCA7C /* DescribeWebView.m */; };
+		4027B91315C6152800AAAE60 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4027B91215C6152800AAAE60 /* CFNetwork.framework */; };
+		4027B91515C6155400AAAE60 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4027B91415C6155400AAAE60 /* Security.framework */; };
 		40C3C5E012EA2A1600260D28 /* libUISpec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 40C7CCA712E9ECFA003FF22C /* libUISpec.a */; };
 		40C7CE5312EA1810003FF22C /* UISpec.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 40C7CE5212EA1810003FF22C /* UISpec.bundle */; };
 		530986800DE753E300CC7C10 /* blueButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 5309867F0DE753E300CC7C10 /* blueButton.png */; };
@@ -104,6 +106,8 @@
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		2F51F20810EED09600FBCA7C /* DescribeWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DescribeWebView.h; sourceTree = "<group>"; };
 		2F51F20910EED09600FBCA7C /* DescribeWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DescribeWebView.m; sourceTree = "<group>"; };
+		4027B91215C6152800AAAE60 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		4027B91415C6155400AAAE60 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		40C7CC9E12E9ECFA003FF22C /* UISpec.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = UISpec.xcodeproj; path = ../UISpec/UISpec.xcodeproj; sourceTree = SOURCE_ROOT; };
 		40C7CE5212EA1810003FF22C /* UISpec.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = UISpec.bundle; path = ../../src/UISpec.bundle; sourceTree = SOURCE_ROOT; };
 		5309867F0DE753E300CC7C10 /* blueButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blueButton.png; sourceTree = "<group>"; };
@@ -191,6 +195,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4027B91515C6155400AAAE60 /* Security.framework in Frameworks */,
+				4027B91315C6152800AAAE60 /* CFNetwork.framework in Frameworks */,
 				1D60589E0D05DD5A006BFB54 /* CoreFoundation.framework in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
@@ -213,6 +219,8 @@
 		29B97314FDCFA39411CA2CEA /* Toolbar */ = {
 			isa = PBXGroup;
 			children = (
+				4027B91415C6155400AAAE60 /* Security.framework */,
+				4027B91215C6152800AAAE60 /* CFNetwork.framework */,
 				C7FD8FF110B321E80088AD09 /* Specs */,
 				533959C80DB800E8004A17CB /* ReadMe.txt */,
 				29B97315FDCFA39411CA2CEA /* Sources */,
@@ -648,18 +656,22 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Prefix.pch;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "../../headers/**";
+				HEADER_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)/**";
 				INFOPLIST_FILE = Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = "-ObjC";
+				"OTHER_LDFLAGS[arch=*]" = "-ObjC";
 				PREBINDING = NO;
 				PRODUCT_NAME = UICatalog;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -674,16 +686,20 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Don't Code Sign";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Prefix.pch;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "../../headers/**";
+				HEADER_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)/**";
 				INFOPLIST_FILE = Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = "-ObjC";
+				"OTHER_LDFLAGS[arch=*]" = "-ObjC";
 				PREBINDING = NO;
 				PRODUCT_NAME = UICatalog;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
