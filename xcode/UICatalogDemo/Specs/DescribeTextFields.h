@@ -1,7 +1,7 @@
 
 #import "DescribeUICatalog.h"
 
-@interface DescribeTextFields : DescribeUICatalog {
+@interface DescribeTextFields : DescribeUICatalog <UISpec> {
 
 }
 
